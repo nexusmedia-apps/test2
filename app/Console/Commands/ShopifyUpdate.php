@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\ShopifyApiService;
 use Illuminate\Console\Command;
 use App\Models\Customer;
 use App\Models\Order;
@@ -22,48 +23,51 @@ class ShopifyUpdate extends Command
      */
     protected $description = 'Get new data from Shopify API and save it in customers and orders tables';
 
+    private $shopifyApiService;
+    private $customer;
+    private $order;
+
+    public function __construct(
+        ShopifyApiService $shopifyApiService,
+        Customer $customer,
+        Order $order
+    )
+    {
+        parent::__construct();
+        $this->shopifyApiService = $shopifyApiService;
+        $this->customer = $customer;
+        $this->order = $order;
+    }
+
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $url = 'https://'.env('SHOPIFY_API_KEY').':'.env('SHOPIFY_API_PASSWORD').'@shortcodesdev.myshopify.com/admin/orders.json';
-
-        $curl = curl_init();
-
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
-        $output = curl_exec($curl);
-
-        curl_close($curl);
-
-        $response = json_decode($output);
+        $response = $this->shopifyApiService->getOrders();
 
         if (!$response->orders) {
             echo('Error with API');
             return;
         }
 
-        (new Order())->delete();
-        (new Customer())->delete();
+        $this->customer->delete();
+        $this->order->delete();
 
         foreach($response->orders as $orderData) {
-            $customer = new Customer;
+            $customer = $this->customer->create([
+                'name' => $orderData->name,
+                'email' => $orderData->email,
+            ]);
 
-            $customer->name = $orderData->name;
-            $customer->email = $orderData->email;
-
-            $customer->save();
-
-            $order = new Order;
-
-            $order->customer_id = $customer->id;
-            $order->total_price = $orderData->total_price;
-            $order->financial_status = $orderData->financial_status;
-            $order->fulfillment_status = $orderData->fulfillment_status;
-
-            $order->save();
+            if($customer) {
+                $this->order->create([
+                    'customer_id' => $customer->id,
+                    'total_price' => $orderData->total_price,
+                    'financial_status' => $orderData->financial_status,
+                    'fulfillment_status' => $orderData->fulfillment_status,
+                ]);
+            }
         }
     }
 }

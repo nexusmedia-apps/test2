@@ -1,2 +1,3 @@
-import './bootstrap';
-import './import';
+import './bootstrap.js';
+import './import.js';
+import './load-orders.js';
