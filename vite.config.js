@@ -6,6 +6,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
+                'resources/css/nexaris.css',
                 'resources/js/app.js',
                 'resources/js/load-orders.js'
             ],

@@ -6,7 +6,7 @@
     <title>Shopify Orders</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- Include Nexaris CSS -->
-    <link href="/path/to/nexaris.css" rel="stylesheet">
+    @vite('resources/css/nexaris.css')
 </head>
 <body class="bg-gray-100">
 <div class="container mx-auto px-4 py-8">
@@ -15,12 +15,12 @@
             <h1 class="text-2xl font-bold mb-4">Shopify Orders</h1>
 
             <div class="mb-4">
-                <button id="importData" class="nx-button nx-button--primary">Import Data</button>
+                <button id="importData" class="btn btn-primary">Import Data</button>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-select">
                 <label for="financialStatus" class="block mb-2">Filter by Financial Status:</label>
-                <select id="financialStatus" class="nx-select">
+                <select id="financialStatus">
                     <option value="">All</option>
                     <option value="paid">Paid</option>
                     <option value="pending">Pending</option>
@@ -28,20 +28,117 @@
                 </select>
             </div>
 
-            <table class="nx-table w-full">
-                <thead>
-                <tr>
-                    <th>Customer Name</th>
-                    <th>Customer Email</th>
-                    <th>Total Price</th>
-                    <th>Financial Status</th>
-                    <th>Fulfillment Status</th>
-                </tr>
-                </thead>
-                <tbody id="ordersTable">
-                <!-- Orders will be populated here -->
-                </tbody>
-            </table>
+            <div class="card">
+                <div class="index-table-wrapper">
+                    <div class="index-table-header">
+                        <div class="index-table-header-filter">
+
+                            <div class="col-left">
+                                <div class="resptabs tabs3">
+                                    <ul class="primary-list" id="financialStatus">
+                                        <li><button class="tab-item active" data-tab="">All</button></li>
+                                        <li><button class="tab-item" data-tab="paid">Paid</button></li>
+                                        <li><button class="tab-item" data-tab="pending">Pending</button></li>
+                                        <li><button class="tab-item" data-tab="refunded">Refunded</button></li>
+                                    </ul>
+                                </div>
+                                <div class="form-input form-collapsable">
+                                    <input type="search" class="input-icon icon-search" placeholder="Search customers">
+                                </div>
+                            </div>
+
+                            <div class="col-right">
+                                <button class="btn btn-secondary btn-search-cancel">Cancel</button>
+                                <button class="btn btn-icon btn-no-label btn-search">
+            <span class="btn-icon-holder">
+              <svg viewBox="0 0 20 20" class="Polaris-Icon__Svg_375hu" focusable="false" aria-hidden="true"><path fill-rule="evenodd" d="M12.323 13.383a5.5 5.5 0 1 1 1.06-1.06l2.897 2.897a.75.75 0 1 1-1.06 1.06l-2.897-2.897Zm.677-4.383a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"></path></svg>
+            </span>
+                                    <span class="btn-icon-holder">
+              <svg viewBox="0 0 20 20" class="Polaris-Icon__Svg_375hu" focusable="false" aria-hidden="true"><path d="M3 6a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5h-12.5a.75.75 0 0 1-.75-.75Z"></path><path d="M6.75 14a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75Z"></path><path d="M5.5 9.25a.75.75 0 0 0 0 1.5h9a.75.75 0 0 0 0-1.5h-9Z"></path></svg>
+            </span>Search
+                                </button>
+                                <div class="dropdown">
+                                    <button class="btn btn-icon btn-no-label btn-sort dropdown-toggle">
+              <span class="btn-icon-holder">
+                <svg viewBox="0 0 20 20" class="Polaris-Icon__Svg_375hu" focusable="false" aria-hidden="true"><path d="M7.75 6.06v7.69a.75.75 0 0 1-1.5 0v-7.69l-1.72 1.72a.75.75 0 0 1-1.06-1.06l3-3a.75.75 0 0 1 1.06 0l3 3a.75.75 0 1 1-1.06 1.06l-1.72-1.72Z"></path><path d="M13.75 6.25a.75.75 0 0 0-1.5 0v7.69l-1.72-1.72a.75.75 0 1 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72v-7.69Z"></path></svg>
+              </span>Sort
+                                    </button>
+                                    <ul class="dropdown-menu align-right"> <!-- align-right -->
+                                        <li><button>Import</button></li>
+                                        <li><button>Export</button></li>
+                                        <li><button>Duplicate</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="search-filter">
+                                <span class="tag">Wholesale</span>
+                                <span class="tag">Wholesale<button class="tag-close">Close</button></span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="index-table-footer-action">
+                        <div class="index-table-footer-inner">
+                            <button class="btn btn-secondary">Bulk edit</button>
+                            <button class="btn btn-secondary">Set as active</button>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-icon btn-no-label dropdown-toggle">
+            <span class="btn-icon-holder">
+              <svg viewBox="0 0 20 20" class="Polaris-Icon__Svg_375hu" focusable="false" aria-hidden="true"><path d="M6 10a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"></path><path d="M11.5 10a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"></path><path d="M15.5 11.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path></svg>
+            </span>
+                                    Cancel
+                                </button>
+                                <ul class="dropdown-menu align-right">
+                                    <li><button class="dropdown-item">Import</button></li>
+                                    <li><button class="dropdown-item">Export</button></li>
+                                    <li><button class="dropdown-item delete">Delete</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="index-table-inner">
+
+                        <div class="index-table-header-action">
+                            <div class="index-table-header-inner">
+                                <div class="form-checkbox">
+                                    <label>
+                                        <input type="checkbox">
+                                        <span class="checkbox-icon"></span>
+                                        <span class="label-text">2 Selected</span>
+                                    </label>
+                                </div>
+                                <button class="link">Cancel</button>
+                            </div>
+                        </div>
+
+                        <table class="index-table">
+                            <thead>
+                            <tr>
+                                <th class="checkbox-all">
+                                    <div class="form-checkbox">
+                                        <label>
+                                            <input type="checkbox">
+                                            <span class="checkbox-icon"></span>
+                                        </label>
+                                    </div>
+                                </th>
+                                <th>Customer name</th>
+                                <th>Email</th>
+                                <th>Total Price</th>
+                                <th>Financial status</th>
+                                <th>Fulfillment Status</th>
+                                <th>Go to</th>
+                            </tr>
+                            </thead>
+                            <tbody id="ordersTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
             <div id="pagination" class="mt-4">
                 <!-- Pagination links will be populated here -->
@@ -51,91 +148,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script >
-    $(document).ready(function() {
-        let currentPage = 1;
-        let totalPages = 1;
-
-        function loadOrders(page = 1) {
-            const financialStatus = $('#financialStatus').val();
-            $.ajax({
-                url: '/api/orders',
-                method: 'GET',
-                data: {
-                    page: page,
-                    financial_status: financialStatus
-                },
-                success: function(response) {
-                    const orders = response.orders;
-                    let tableHtml = '';
-
-                    orders.forEach(order => {
-                        tableHtml += `
-                        <tr>
-                            <td>${order.customer.name}</td>
-                            <td>${order.customer.email}</td>
-                            <td>$${order.total_price}</td>
-                            <td>${order.financial_status}</td>
-                            <td>${order.fulfillment_status}</td>
-                        </tr>
-                    `;
-                    });
-
-                    $('#ordersTable').html(tableHtml);
-
-                    // Update pagination
-                    currentPage = parseInt(response.current_page);
-                    totalPages = parseInt(response.last_page);
-                    updatePaginationControls();
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error loading orders:', error);
-                }
-            });
-        }
-
-        function updatePaginationControls() {
-            let paginationHtml = '';
-            if (currentPage > 1) {
-                paginationHtml += `<button class="nx-button nx-button--secondary mr-2" data-page="${currentPage - 1}">Previous</button>`;
-            }
-            paginationHtml += `<span class="mx-2">Page ${currentPage} of ${totalPages}</span>`;
-            if (currentPage < totalPages) {
-                paginationHtml += `<button class="nx-button nx-button--secondary ml-2" data-page="${currentPage + 1}">Next</button>`;
-            }
-            $('#pagination').html(paginationHtml);
-        }
-
-        // Load initial orders
-        loadOrders();
-
-        // Handle pagination clicks
-        $('#pagination').on('click', 'button', function() {
-            const page = parseInt($(this).data('page'));
-            loadOrders(page);
-        });
-
-        // Handle financial status filter change
-        $('#financialStatus').on('change', function() {
-            loadOrders(1);
-        });
-
-        // Handle import data button click
-        $('#importData').on('click', function() {
-            $.ajax({
-                url: '/api/import',
-                method: 'POST',
-                success: function(response) {
-                    alert('Data imported successfully');
-                    loadOrders(1);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error importing data:', error);
-                    alert('Error importing data. Please try again.');
-                }
-            });
-        });
-    });
-</script>
+@vite('resources/js/load-orders.js')
 </body>
 </html>

@@ -18,11 +18,27 @@ $(document).ready(function() {
                 orders.forEach(order => {
                     tableHtml += `
                         <tr>
-                            <td>${order.customer.name}</td>
-                            <td>${order.customer.email}</td>
-                            <td>$${order.total_price}</td>
-                            <td>${order.financial_status}</td>
-                            <td>${order.fulfillment_status}</td>
+                            <td class="checkbox-cell">
+                                <div class="form-checkbox">
+                                    <label>
+                                        <input type="checkbox">
+                                        <span class="checkbox-icon"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td><a href="#1"><span>${order.customer.name}</span></a></td>
+                            <td><span class="badge">${order.customer.email}</span></td>
+                            <td><p>$${order.total_price}</p></td>
+                            <td><p>${order.financial_status}</p></td>
+                            <td><p>${order.fulfillment_status}</p></td>
+                            <td>
+                                <button class="btn btn-icon btn-no-label btn-secondary">
+                                    <span class="btn-icon-holder">
+                                      <svg viewBox="0 0 20 20" class="Icon_Icon__Dm3QW" style="width: 20px; height: 20px;"><path d="M8 16a.999.999 0 0 1-.707-1.707l4.293-4.293-4.293-4.293a.999.999 0 1 1 1.414-1.414l5 5a.999.999 0 0 1 0 1.414l-5 5a.997.997 0 0 1-.707.293z"></path></svg>
+                                    </span>
+                                    Go to
+                                </button>
+                            </td>
                         </tr>
                     `;
                 });
@@ -43,11 +59,11 @@ $(document).ready(function() {
     function updatePaginationControls() {
         let paginationHtml = '';
         if (currentPage > 1) {
-            paginationHtml += `<button class="nx-button nx-button--secondary mr-2" data-page="${currentPage - 1}">Previous</button>`;
+            paginationHtml += `<button class="button button--secondary mr-2" data-page="${currentPage - 1}">Previous</button>`;
         }
         paginationHtml += `<span class="mx-2">Page ${currentPage} of ${totalPages}</span>`;
         if (currentPage < totalPages) {
-            paginationHtml += `<button class="nx-button nx-button--secondary ml-2" data-page="${currentPage + 1}">Next</button>`;
+            paginationHtml += `<button class="button button--secondary ml-2" data-page="${currentPage + 1}">Next</button>`;
         }
         $('#pagination').html(paginationHtml);
     }
